@@ -28,6 +28,16 @@ class DarkModeConfig:
     LIGHT_FCITX5_THEME = "微软拼音"  # Light fcitx5 skin
     DARK_FCITX5_THEME = "plasma"  # Dark fcitx5 skin
 
+    LIGHT_WALLPAPER = "file:$HOME/.local/share/Steam/steamapps/workshop/content/431960/2239430876/原神风景-wallpaper.mp4+video".replace(
+        "$HOME", os.environ.get("HOME")
+    )  # Light wallpaper source
+    LIGHT_WALLPAPER_ID = "2239430876"
+
+    DARK_WALLPAPER = "file:$HOME/.local/share/Steam/steamapps/workshop/content/431960/2301901996/scene.json+scene".replace(
+        "$HOME", os.environ.get("HOME")
+    )  # Dark wallpaper source
+    DARK_WALLPAPER_ID = "2301901996"
+
 
 class DarkModeSwitch(ISwitch):
     def __init__(self):
@@ -56,6 +66,32 @@ class DarkModeSwitch(ISwitch):
         self.state = self.get()
         print(f"Dark mode is {self.state}.")
 
+    def set_wallpaper(self, source: str, id: str):
+        script = """
+                var allDesktops = desktops();
+        for (i=0;i<allDesktops.length;i++) {
+            d = allDesktops[i];
+            d.wallpaperPlugin = "com.github.casout.wallpaperEngineKde";
+            d.currentConfigGroup = Array("Wallpaper",
+                                        "com.github.casout.wallpaperEngineKde",
+                                        "General");
+            d.writeConfig("WallpaperSource", "SOURCE");
+            d.writeConfig("WallpaperWorkShopId", "ID");
+        }
+        """.replace(
+            "SOURCE", source
+        ).replace(
+            "ID", id
+        )
+        msg = QDBus.QDBusMessage.createMethodCall(
+            "org.kde.plasmashell",
+            "/PlasmaShell",
+            "org.kde.PlasmaShell",
+            "evaluateScript",
+        )
+        msg.setArguments([script])
+        QDBus.QDBusConnection.sessionBus().call(msg)
+
     def get(self) -> bool:
         current_kvantum_theme = self.kvantum_config.value("theme")
         if current_kvantum_theme == self.config.LIGHT_KVANTUM_THEME:
@@ -76,6 +112,15 @@ class DarkModeSwitch(ISwitch):
             )
         ):
             os.remove(f)
+        # 设置壁纸
+        self.set_wallpaper(
+            self.config.DARK_WALLPAPER
+            if value
+            else self.config.LIGHT_WALLPAPER,
+            self.config.DARK_WALLPAPER_ID
+            if value
+            else self.config.LIGHT_WALLPAPER_ID,
+        )
         # 设置颜色主题
         sp.run(
             [
