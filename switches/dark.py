@@ -6,6 +6,7 @@ from gi.repository import Gio
 import os
 import glob
 import subprocess as sp
+from time import sleep
 
 
 @dataclass
@@ -53,11 +54,6 @@ class DarkModeSwitch(ISwitch):
             "conf",
             "classicui.conf",
         )
-        self.fcitx5_ui_config = QSettings(
-            self.fcitx5_ui_config_path,
-            QSettings.IniFormat,
-        )
-        self.fcitx5_ui_config.setIniCodec("UTF-8")
         self.state = self.get()
         print(f"Dark mode is {self.state}.")
 
@@ -126,16 +122,18 @@ class DarkModeSwitch(ISwitch):
             ]
         )
         # 设置 fcitx5 主题
-        self.fcitx5_ui_config.setValue(
-            "Theme",
-            self.config.DARK_FCITX5_THEME
-            if value
-            else self.config.LIGHT_FCITX5_THEME,
-        )
-        with open(self.fcitx5_ui_config_path, "r") as f:
-            fcitx5_ui_config = f.read().replace("[General]", "")
+        fcitx5_ui_config = open(self.fcitx5_ui_config_path, "r").readlines()
+        for i in range(len(fcitx5_ui_config)):
+            if fcitx5_ui_config[i].startswith("Theme="):
+                fcitx5_ui_config[i] = (
+                    "Theme=" + (self.config.DARK_FCITX5_THEME
+                    if value
+                    else self.config.LIGHT_FCITX5_THEME)
+                    + "\n"
+                )
+                break
         with open(self.fcitx5_ui_config_path, "w") as f:
-            f.write(fcitx5_ui_config)
+            f.writelines(fcitx5_ui_config)
         # 加载 GTK4 主题
         sp.run(
             [
