@@ -182,7 +182,7 @@ class DarkModeSwitch(ISwitch):
         self.ref_window.setStyleSheet(
             """
             #mainWindow {
-                background: rgba(COLOR, COLOR, COLOR, 1);
+                background: rgb(COLOR, COLOR, COLOR);
                 margin: 0px;
                 padding: 0px;
             }
@@ -190,8 +190,4 @@ class DarkModeSwitch(ISwitch):
                 "COLOR", color
             )
         )
-        if value:
-            self.ref_window.setAttribute(Qt.WA_NoSystemBackground)
-        else:
-            self.ref_window.setAttribute(Qt.WA_TranslucentBackground)
         print(f"Set dark mode to {self.state}.")

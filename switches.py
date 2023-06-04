@@ -70,7 +70,7 @@ if __name__ == "__main__":
         window.setStyleSheet(
             """
             #mainWindow {
-                background: rgba(COLOR, COLOR, COLOR, 1);
+                background: rgb(COLOR, COLOR, COLOR);
                 margin: 0px;
                 padding: 0px;
             }
@@ -83,10 +83,6 @@ if __name__ == "__main__":
             Qt.WindowStaysOnTopHint
         ]:
             window.setWindowFlag(flag)
-        if darkdetect.isLight():
-            window.setAttribute(Qt.WA_TranslucentBackground)
-        else:
-            window.setAttribute(Qt.WA_NoSystemBackground)
 
         # 网格布局
         grid_layout = QGridLayout()
