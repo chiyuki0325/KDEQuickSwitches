@@ -112,7 +112,7 @@ if __name__ == "__main__":
             v_layout.addWidget(button)
             v_layout.addWidget(label)
 
-            switch.set_ref(button, label, window)
+            switch.set_ref(button, label, window, app)
             switch.update_ui()
 
             frame.setLayout(v_layout)

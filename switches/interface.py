@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QInputDialog
 import os
 import subprocess as sp
 from enum import Enum
+from time import sleep
 
 
 class SwitchType(Enum):
@@ -34,6 +35,7 @@ class ISwitch:
         self.ref_window = None
         self.ref_button = None
         self.ref_label = None
+        self.ref_app = None
 
     def get(self):
         pass
@@ -57,6 +59,8 @@ class ISwitch:
                 if ok:
                     self.set(value)
         self.update_ui()
+        sleep(0.3)
+        self.ref_window.hide()
 
     @property
     def label_text(self):
@@ -93,8 +97,10 @@ class ISwitch:
             )
         else:
             self.ref_button.setIcon(QIcon.fromTheme(self.icon))
+        self.ref_app.processEvents()
 
-    def set_ref(self, button, label, window):
+    def set_ref(self, button, label, window, app):
         self.ref_button = button
         self.ref_label = label
         self.ref_window = window
+        self.ref_app = app

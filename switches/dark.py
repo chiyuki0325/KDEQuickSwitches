@@ -1,12 +1,11 @@
 from switches.interface import ISwitch
 from dataclasses import dataclass
-from PyQt5.QtCore import QSettings, Qt
+from PyQt5.QtCore import QSettings
 import PyQt5.QtDBus as QDBus
 from gi.repository import Gio
 import os
 import glob
 import subprocess as sp
-from time import sleep
 
 
 @dataclass
@@ -126,9 +125,12 @@ class DarkModeSwitch(ISwitch):
         for i in range(len(fcitx5_ui_config)):
             if fcitx5_ui_config[i].startswith("Theme="):
                 fcitx5_ui_config[i] = (
-                    "Theme=" + (self.config.DARK_FCITX5_THEME
-                    if value
-                    else self.config.LIGHT_FCITX5_THEME)
+                    "Theme="
+                    + (
+                        self.config.DARK_FCITX5_THEME
+                        if value
+                        else self.config.LIGHT_FCITX5_THEME
+                    )
                     + "\n"
                 )
                 break
