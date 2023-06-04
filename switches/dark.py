@@ -133,7 +133,7 @@ class DarkModeSwitch(ISwitch):
             else self.config.LIGHT_FCITX5_THEME,
         )
         with open(self.fcitx5_ui_config_path, "r") as f:
-            fcitx5_ui_config = f.read().replace("[General]\n", "")
+            fcitx5_ui_config = f.read().replace("[General]", "")
         with open(self.fcitx5_ui_config_path, "w") as f:
             f.write(fcitx5_ui_config)
         # 加载 GTK4 主题

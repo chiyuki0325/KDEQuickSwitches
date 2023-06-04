@@ -13,6 +13,3 @@ class DDNSSwitch(ISwitch):
     def set(self):
         sp.run("ddns-go -noweb &", shell=True)
         print("DDNS set.")
-
-    def trigger(self):
-        super().trigger()
