@@ -1,8 +1,8 @@
-from switches.interface import ISwitch, SwitchType
+from switches.interfaces import BaseSwitch, SwitchType
 import subprocess as sp
 
 
-class DDNSSwitch(ISwitch):
+class DDNSSwitch(BaseSwitch):
     def __init__(self):
         super().__init__(
             name="DDNS",

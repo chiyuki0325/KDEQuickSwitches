@@ -1,4 +1,4 @@
-from switches.interface import ISwitch
+from switches.interfaces import BaseSwitch
 from dataclasses import dataclass
 from PyQt5.QtCore import QSettings
 import PyQt5.QtDBus as QDBus
@@ -39,7 +39,7 @@ class DarkModeConfig:
     DARK_WALLPAPER_ID = "2301901996"
 
 
-class DarkModeSwitch(ISwitch):
+class DarkModeSwitch(BaseSwitch):
     def __init__(self):
         super().__init__(
             name="夜间模式",

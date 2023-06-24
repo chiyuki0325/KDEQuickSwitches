@@ -1,15 +1,14 @@
-from switches.interface import ISwitch
+from switches.interfaces import BaseSwitch, SudoableSwitch
 import yaml
 import subprocess as sp
 
 
-class TUNSwitch(ISwitch):
+class TUNSwitch(BaseSwitch, SudoableSwitch):
     def __init__(self):
         super().__init__(
             name="TUN",
             icon="network-receive-symbolic",
             icon_disabled="network-disconnected-symbolic",
-            needs_sudo=True,
             cmd_name="set-tun",
         )
         self.path = "/etc/clash-meta/config.yaml"

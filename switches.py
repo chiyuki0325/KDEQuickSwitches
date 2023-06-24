@@ -16,13 +16,14 @@ from PyQt5.QtCore import Qt, QSize
 import sys
 import darkdetect
 
-from switches.interface import ISwitch
+from switches.interfaces import BaseSwitch, SudoableSwitch
 from switches.tun import TUNSwitch
 from switches.dark import DarkModeSwitch
 from switches.performance import PerformanceModeSwitch
 from switches.ddns import DDNSSwitch
 from switches.base64 import Base64Switch
 from switches.color_chooser import ColorChooserSwitch
+from switches.camera import CameraSwitch
 
 SCREEN_WIDTH: int = 1920
 WINDOW_WIDTH: int = 510
@@ -33,17 +34,19 @@ SWITCH_HEIGHT: int = 3
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         # 初始化状态
-        switches: list[ISwitch] = [
+
+        # switches 中存储所有开关的实例
+        switches: list[BaseSwitch] = [
             TUNSwitch(),
             DarkModeSwitch(),
             PerformanceModeSwitch(),
             DDNSSwitch(),
             Base64Switch(),
             ColorChooserSwitch(),
+            CameraSwitch()
         ]
-
         for switch in switches:
-            if switch.needs_sudo:
+            if isinstance(switch, SudoableSwitch):
                 switch.main_module_file_name = __file__
                 # 否则会返回 interface.py 的路径而不是主模块的路径
 
@@ -78,10 +81,7 @@ if __name__ == "__main__":
                 "COLOR", color
             )
         )
-        for flag in [
-            Qt.FramelessWindowHint,
-            Qt.WindowStaysOnTopHint
-        ]:
+        for flag in [Qt.FramelessWindowHint, Qt.WindowStaysOnTopHint]:
             window.setWindowFlag(flag)
 
         # 网格布局
@@ -133,6 +133,18 @@ if __name__ == "__main__":
 
         app.exec_()
     else:
-        match sys.argv[1]:
-            case "set-tun":
-                TUNSwitch().set(sys.argv[2] == "True")
+        # switches 中存储所有开关的类
+        switches: list[BaseSwitch] = [
+            TUNSwitch,
+            DarkModeSwitch,
+            PerformanceModeSwitch,
+            DDNSSwitch,
+            Base64Switch,
+            ColorChooserSwitch,
+            CameraSwitch
+        ]
+        for switch_cls in switches:
+            if (issubclass(switch_cls, SudoableSwitch)):
+                switch = switch_cls()
+                if sys.argv[1] == switch.cmd_name:
+                    switch.call_with_sudo(sys.argv)

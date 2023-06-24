@@ -1,10 +1,10 @@
-from switches.interface import ISwitch, SwitchType
+from switches.interfaces import BaseSwitch, SwitchType
 import pyperclip
 from base64 import b64encode
 import subprocess as sp
 
 
-class Base64Switch(ISwitch):
+class Base64Switch(BaseSwitch):
     def __init__(self):
         super().__init__(
             name="Base64",

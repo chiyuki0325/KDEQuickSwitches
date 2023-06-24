@@ -1,14 +1,14 @@
-from switches.interface import ISwitch
+from switches.interfaces import BaseSwitch, SudoableSwitch
 import subprocess as sp
 
 
-class PerformanceModeSwitch(ISwitch):
+class PerformanceModeSwitch(BaseSwitch, SudoableSwitch):
     def __init__(self):
         super().__init__(
             name="性能模式",
             icon="preferences-system-power-symbolic",
             icon_disabled="battery-level-100-symbolic",
-            needs_sudo=False,  # sudo 直接在 Python 里写好了，无需以 sudo 自己的方式切换
+            cmd_name="set-performance-mode",
         )
         self.state = self.get()
         print(f"Performance mode is {self.state}.")
@@ -27,6 +27,9 @@ class PerformanceModeSwitch(ISwitch):
 
     def set(self, value: bool):
         self.state = value
+        if self.sudo_me(value):
+            self.update_ui()
+            return
         sp.run(
             [
                 "sudo",

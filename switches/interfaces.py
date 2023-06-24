@@ -12,13 +12,12 @@ class SwitchType(Enum):
     STRING = 3
 
 
-class ISwitch:
+class BaseSwitch:
     def __init__(
         self,
         name: str,
         icon: str,
         type: SwitchType | None = SwitchType.BOOL,
-        needs_sudo: bool | None = False,
         icon_disabled: str | None = None,
         cmd_name: str | None = None,
         prompt: str | None = None,
@@ -27,7 +26,6 @@ class ISwitch:
         self.icon = icon
         self.type = type
         self.icon_disabled = icon_disabled
-        self.needs_sudo = needs_sudo
         self.cmd_name = cmd_name
         self.prompt = prompt
         self.main_module_file_name = None
@@ -74,7 +72,7 @@ class ISwitch:
     def sudo_me(self, value) -> bool:
         if os.getuid() == 0:
             return False
-        if self.needs_sudo:
+        if isinstance(self, SudoableSwitch):
             cmd = [
                 "sudo",
                 "python3",
@@ -82,6 +80,7 @@ class ISwitch:
                 self.cmd_name,
                 str(value),
             ]
+            print(cmd)
             sp.run(cmd)
             return True
         else:
@@ -104,3 +103,8 @@ class ISwitch:
         self.ref_label = label
         self.ref_window = window
         self.ref_app = app
+
+
+class SudoableSwitch:
+    def call_with_sudo(self, argv):
+        self.set(argv[2] == "True")

@@ -1,1 +1,3 @@
-/.idea
+.idea
+switches/__pycache__/
+__pycache__/

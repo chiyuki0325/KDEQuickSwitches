@@ -1,8 +1,8 @@
-from switches.interface import ISwitch, SwitchType
+from switches.interfaces import BaseSwitch, SwitchType
 import subprocess as sp
 
 
-class ColorChooserSwitch(ISwitch):
+class ColorChooserSwitch(BaseSwitch):
     def __init__(self):
         super().__init__(
             name="颜色选择器",
