@@ -24,6 +24,7 @@ from switches.ddns import DDNSSwitch
 from switches.base64 import Base64Switch
 from switches.color_chooser import ColorChooserSwitch
 from switches.camera import CameraSwitch
+from switches.dmlive import DMLiveSwitch
 
 SCREEN_WIDTH: int = 1920
 WINDOW_WIDTH: int = 510
@@ -43,7 +44,8 @@ if __name__ == "__main__":
             DDNSSwitch(),
             Base64Switch(),
             ColorChooserSwitch(),
-            CameraSwitch()
+            CameraSwitch(),
+            DMLiveSwitch(),
         ]
         for switch in switches:
             if isinstance(switch, SudoableSwitch):
@@ -136,11 +138,7 @@ if __name__ == "__main__":
         # switches 中存储所有开关的类
         switches: list[BaseSwitch] = [
             TUNSwitch,
-            DarkModeSwitch,
             PerformanceModeSwitch,
-            DDNSSwitch,
-            Base64Switch,
-            ColorChooserSwitch,
             CameraSwitch
         ]
         for switch_cls in switches:

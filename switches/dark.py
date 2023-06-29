@@ -33,10 +33,10 @@ class DarkModeConfig:
     )  # Light wallpaper source
     LIGHT_WALLPAPER_ID = "2239430876"
 
-    DARK_WALLPAPER = "file:$HOME/.local/share/Steam/steamapps/workshop/content/431960/2301901996/scene.json+scene".replace(
+    DARK_WALLPAPER = "file:$HOME/.local/share/Steam/steamapps/workshop/content/431960/2375520960/scene.json+scene".replace(
         "$HOME", os.environ.get("HOME")
     )  # Dark wallpaper source
-    DARK_WALLPAPER_ID = "2301901996"
+    DARK_WALLPAPER_ID = "2375520960"
 
 
 class DarkModeSwitch(BaseSwitch):
